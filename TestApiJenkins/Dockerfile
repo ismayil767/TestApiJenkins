@@ -3,9 +3,11 @@ WORKDIR /app
 
 COPY *.csproj .
 
-RUN dotnet restore /app/*.csproj
+RUN dotnet restore 
 
 COPY . ./
+
+RUN ls
 
 RUN dotnet publish --no-restore -c Release -o /app/out 
 
