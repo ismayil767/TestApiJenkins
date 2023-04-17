@@ -18,21 +18,21 @@
 #COPY --from=build-env /app/out .
 #ENTRYPOINT ["dotnet","TestApiJenkins.dll"]
 #
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["TestApiJenkins.csproj", "TestApiJenkins/"]
-dotnet restore -p:RestoreUseSkipNonexistentTargets=false -nowarn:msb3202,nu1503
-COPY . .
-WORKDIR "/src"
-RUN dotnet build "TestApiJenkins.csproj" -c Release -o /app/build
+# Copy the project file and restore dependencies
+COPY TestApiJenkins/TestApiJenkins.csproj .
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish "TestApiJenkins.csproj" -c Release -o /app/publish /p:UseAppHost=false
+# Copy the rest of the source code and build the application
+COPY TestApiJenkins/ .
+RUN dotnet publish -c Release -o out
 
-FROM base AS final
+# Create the final image with only the compiled code
+FROM mcr.microsoft.com/dotnet/runtime:6.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TestApiJenkins.dll"]
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet", "TestApp.dll"]
