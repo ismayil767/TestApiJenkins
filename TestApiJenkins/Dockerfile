@@ -24,7 +24,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["TestApiJenkins.csproj", "TestApiJenkins/"]
-RUN dotnet restore
+dotnet restore -p:RestoreUseSkipNonexistentTargets=false -nowarn:msb3202,nu1503
 COPY . .
 WORKDIR "/src"
 RUN dotnet build "TestApiJenkins.csproj" -c Release -o /app/build
