@@ -8,6 +8,7 @@ RUN dotnet restore
 COPY . .
 
 RUN ls
+RUN ls ..
 
 RUN dotnet publish --no-restore -c Release -o out
 
