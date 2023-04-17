@@ -5,7 +5,7 @@ COPY *.csproj .
 
 RUN dotnet restore
 
-COPY . .
+COPY . ./
 
 RUN dotnet publish --no-restore -c Release -o out 
 
