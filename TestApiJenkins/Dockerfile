@@ -1,22 +1,16 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk AS build-env
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
-COPY ["TestApiJenkins/TestApiJenkins.csproj", "TestApiJenkins/"]
-RUN dotnet restore "TestApiJenkins/TestApiJenkins.csproj"
-COPY . .
-WORKDIR "/src/TestApiJenkins"
-RUN dotnet build "TestApiJenkins.csproj" -c Release -o /app/build
+COPY *.csproj .
 
-FROM build AS publish
-RUN dotnet publish "TestApiJenkins.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet restore
 
-FROM base AS final
+COPY . ./
+
+RUN dotnet publish --no-restore -c Release -o out 
+
+
+FROM mcr.microsoft.com/dotnet/runtime:7.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "TestApiJenkins.dll"]
+COPY --from=build-env /app/out .
+ENTRYPOINT ["dotnet","TestApiJenkins.dll"]
