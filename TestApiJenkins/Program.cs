@@ -8,7 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
+builder.WebHost.UseUrls("http://*:1000");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
