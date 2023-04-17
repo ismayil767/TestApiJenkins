@@ -20,7 +20,7 @@
 #
 
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy the project file and restore dependencies
@@ -32,7 +32,7 @@ COPY . .
 RUN dotnet publish -c Release -o out
 
 # Create the final image with only the compiled code
-FROM mcr.microsoft.com/dotnet/runtime:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "TestApiJenkins.dll"]
