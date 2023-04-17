@@ -5,11 +5,11 @@ COPY *.csproj .
 
 RUN dotnet restore 
 
-COPY . ./
+COPY . .
 
 RUN ls
 
-RUN dotnet publish --no-restore -c Release -o /app/out 
+RUN dotnet publish --no-restore -c Release -o out
 
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
