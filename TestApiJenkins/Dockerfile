@@ -24,11 +24,11 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
 WORKDIR /app
 
 # Copy the project file and restore dependencies
-COPY TestApiJenkins/TestApiJenkins.csproj .
+COPY *.csproj .
 RUN dotnet restore
 
 # Copy the rest of the source code and build the application
-COPY TestApiJenkins/ .
+COPY . .
 RUN dotnet publish -c Release -o out
 
 # Create the final image with only the compiled code
