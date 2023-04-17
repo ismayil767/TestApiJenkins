@@ -7,7 +7,7 @@ RUN dotnet restore /app/*.csproj
 
 COPY . ./
 
-RUN dotnet publish --no-restore -c Release -o out 
+RUN dotnet publish --no-restore -c Release -o /app/out 
 
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0
